@@ -80,7 +80,6 @@ class Travel:
         subsets = []
         for i in range(1, len(text) + 1):  # 길이 1부터 전체 길이까지
             subsets.extend([''.join(combo) for combo in combinations(text, i)])
-            
         for target in self.dfs_result:
             if target in subsets:
                 self.result += len(target)
