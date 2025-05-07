@@ -30,10 +30,6 @@ int intcompare(const void *a , const void *b)
         }  
     }
 } 
-int strcompare(const void *a, const void *b) 
-{ 
-    return strcmp((char*)a, (char*)b);
-}
 int main(){
     int num = 0;
     scanf("%d\n", &num);    // 1 <= num <= 1000
@@ -67,10 +63,15 @@ int main(){
             real_num[i].y_arr = -1;
         }
     }
-    qsort(real_num, num, 4,intcompare);
-    qsort(real_num, num, 8,intcompare);
+    qsort(real_num, num, sizeof(Number),intcompare);
     // // real_num = quickSort(real_num, num/2, num-1);
     for(int i=0; i<num; i++){
-        printf("%d.%s\n", real_num[i].x_arr,real_num[i].y_arr);
+        printf("%d",real_num[i].x_arr);
+        if (real_num[i].y_arr == -1){
+            printf("\n");
+        }
+        else {
+            printf(".%d\n",real_num[i].y_arr);
+        }
     }
 }
