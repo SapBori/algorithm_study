@@ -12,9 +12,10 @@ char ghost = 'G';
 char exit_c = 'D';
 int ghost_num = 0;
 int walls_num =0;
-int dir_x[4] = {-1,0,1,0};
-int dir_y[4] = {0,1,0,-1};
+int dir_x[4] = {0,0,-1,1};
+int dir_y[4] = {-1,1,0,0};
 char mage[1004][1004];
+int moving_case = 0;
 typedef struct{
     int x;
     int y;
@@ -75,12 +76,16 @@ int ghost_find_path(Position exit){
             if (move_y < 0 || move_y >= mage_y || move_x < 0 || move_x >= mage_x){
                 continue;
             }
+            // if (abs(move_x - exit.x) > abs(new_ghost.x-exit.x) && abs(move_y - exit.y) > abs(new_ghost.y - exit.y)){
+            //     continue;
+            // }
             if(ghost_visited[move_y][move_x]==0) {
                 ghost_visited[move_y][move_x]=ghost_visited[new_ghost.y][new_ghost.x]+1;    
                 // 최종 거리만 확인
                 new_ghost.x = move_x;
                 new_ghost.y = move_y;
                 g_push(new_ghost);
+                break;
             }
         }
     }
@@ -94,18 +99,26 @@ int namwo_find_path(Position exit){
         for (int i=0; i<4; i++){
             move_x = now_namwo.x + dir_x[i];
             move_y = now_namwo.y + dir_y[i];
-
-            if (move_y < 0 || move_y >= mage_y || move_x < 0 || move_x >= mage_x || mage[move_y][move_x]=='#'){
+            
+            if (move_y < 0 || move_y >= mage_y || move_x < 0 || move_x >= mage_x || mage[move_y][move_x]=='#' || mage[move_y][move_x]=='G'){
                 continue;
             }
+            // if (abs(move_x - exit.x) > abs(now_namwo.x-exit.x) && abs(move_y - exit.y) > abs(now_namwo.y - exit.y)){
+            //     continue;
+            // }
+            
             if(namwo_visited[move_y][move_x]==0 && namwo_visited[now_namwo.y][now_namwo.x]+1 < ghost_visited[move_y][move_x]) {
                 namwo_visited[move_y][move_x]=namwo_visited[now_namwo.y][now_namwo.x]+1;    
                 // 최종 거리만 확인
                 now_namwo.x = move_x;
                 now_namwo.y = move_y;
                 n_push(now_namwo);
+                break;
             }
         }
+    }
+    if (namwo_visited[exit.y][exit.x] <= 0){
+        return 1000*1000;
     }
     return namwo_visited[exit.y][exit.x];
 }
@@ -147,5 +160,5 @@ int main(){
     ghost_shortest_sec = ghost_find_path(pos_exit);
     namwo_shortest_sec = namwo_find_path(pos_exit);
 
-    ghost_shortest_sec > namwo_shortest_sec ? printf("No") : printf("Yes");
+    ghost_shortest_sec < namwo_shortest_sec ? printf("No") : printf("Yes");
 }
